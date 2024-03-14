@@ -3,22 +3,25 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <script src="index.js"></script>
-    <title>Geolocalización</title>
+    <title>Maps</title>
 </head>
 
 <body>
     <h1>API Google Maps</h1>
 
     <div id="map"></div>
+    <input type="text" name="adreca" value="Carrer de la Selva de Mar 211 08020 Barcelona" id="adreca" />
     <button type="button" class="btn btn-secondary" id="findLoc">Buscar adreça</button>
-    <input type="hidden" name="lat" value="" id="latitude" />
-    <input type="hidden" name="lng" value="" id="longitude" />
+    <br>
+    <input type="text" name="lat" value="" id="latitude" placeholder="lat" />
+    <input type="text" name="lng" value="" id="longitude" placeholder="lng" />
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAwEQr8flR0CtMZ-jSs9hK8lscYUMOtVPk&callback=initMap"async defer></script>
-
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAwEQr8flR0CtMZ-jSs9hK8lscYUMOtVPk&callback=initMap"
+        async defer></script>
 </body>
 
 </html>
