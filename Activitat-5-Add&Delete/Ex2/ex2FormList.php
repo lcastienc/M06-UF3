@@ -20,6 +20,18 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+//Eliminación
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action'])&& $_POST['action']=='delete') {
+    $id = $_POST['id'];
+    $delete = "DELETE FROM productes WHERE id = $id";
+    if ($conn->query($delete)===TRUE) {
+        echo "Eliminación realizida exitosamente";
+    }else{
+        echo "La eliminación no se ha realizado: " . $conn->error;
+    }
+}
+
+//Parte encargada de obtener los datos de la tabla productos
 $sql = "SELECT * FROM productes";
 
 $result = $conn->query($sql);
@@ -33,6 +45,7 @@ if ($result->num_rows > 0) {
 } else {
     echo "0 results";
 }
+
 
 $conn->close();
 ?>
@@ -79,6 +92,7 @@ $conn->close();
         </div>
     </div>
 
+
     <script>
         let btnEdit = document.querySelectorAll(".btnEdit");
         btnEdit.forEach(el=>{
@@ -102,40 +116,42 @@ $conn->close();
                 .catch((error) => {});
 
             })
-        });
+        })
 
-        document.addEventListener("DOMContentLoaded", function(){
-            let btnRemove = document.querySelectorAll(".btnRemove");
-            btnRemove.forEach(el=>{
-                el.addEventListener("click", function(event){
-                    event.preventDefault();
-                let id = this.getAttribute("idProd");
-                console.log(id)
-                let confirmation = confirm("¿Estás seguro de que quieres eliminar este producto?");
-                if (confirmation) {
-                   let formData = new FormData();
-                   formData.delete("id", id);
-                   formData.delete("action", "delete"); 
+        document.addEventListener("DOMContentLoaded", function() {
+        let btnRemove = document.querySelectorAll(".btnRemove");
+        btnRemove.forEach(el => {
+            el.addEventListener("click", function(e) {
+                e.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+                
+                // Obtener el ID del producto que se va a eliminar
+                let productId = this.getAttribute("idProd");
+                
+                // Crear un formulario y añadir los datos necesarios para la eliminación
+                let formData = new FormData();
+                formData.append("id", productId);
+                formData.append("action", "delete");
 
-                    let options = {
-                            method: 'POST',
-                            body: formData
-                    }
+                // Configurar la solicitud fetch para enviar los datos al archivo PHP
+                let options = {
+                    method: 'POST',
+                    body: formData
+                };
 
-                    fetch( "getProducte.php",options)
-                    .then(response => response.json())
-                    .then(data=>{
-                        console.log(data);
+                // Realizar la solicitud fetch para eliminar el producto
+                fetch(window.location.href, options)
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data); // Puedes manejar la respuesta del servidor aquí
+                        // Recargar la página para reflejar los cambios
                         location.reload();
                     })
-                    .catch(error=>{
-                        console.error("'Error al eliminar el producto:', error");
-                    })
-                }
-            })
-        })
-    })
-
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+    });
 
     </script>
 </body>
